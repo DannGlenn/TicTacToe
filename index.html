@@ -13,11 +13,25 @@
             font-size: 25px;
             float: left;
         }
+
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 20%;
+        }
+
+        td,
+        th {
+            border: 2px solid #000000;
+            text-align: center;
+            /* padding: 5px; */
+        }
     </style>
 
 </head>
 
 <body>
+    <!-- GUI Elements -->
     <div id="container">
         <button id="box1" class="gameButton" onclick="mark(1)"></button>
         <button id="box2" class="gameButton" onclick="mark(2)"></button>
@@ -30,32 +44,48 @@
         <button id="box9" class="gameButton" onclick="mark(9)"></button><br><br><br>
     </div>
     <p id="declareWinner"></p>
-    <button onclick="reset()">Reset</button>
+    <button onclick="reset()">Reset</button><br><br>
+    <div>
+        <table>
+            <tr>
+                <th colspan="2">Scoreboard</th>
+            </tr>
+            <tr>
+                <td>X</td>
+                <td>O</td>
+            </tr>
+            <tr>
+                <td id="Xcol">0</td>
+                <td id="Ocol">0</td>
+            </tr>
+        </table>
+    </div>
 
     <script>
-        let xIsNext = true;
-        let threeToWin = 0;
-        let XmarkedBoxes = [];
-        let OmarkedBoxes = [];
-        const winValues = [[1, 2, 3], [4, 5, 6], [7, 8, 9], [1, 4, 7], [2, 5, 8], [3, 6, 9], [1, 5, 9], [3, 5, 7]];
-        let tempArray = [];
+        // Variables definition
+        let xIsNext = true;         //A flag to determine whose turn is it
+        let threeToWin = 0;         //Win state occures if == 3
+        let XmarkedBoxes = [];      //Records every X marked button in current round
+        let OmarkedBoxes = [];      //Records every O marked button in current round
+        const winValues = [[1, 2, 3], [4, 5, 6], [7, 8, 9], [1, 4, 7], [2, 5, 8], [3, 6, 9], [1, 5, 9], [3, 5, 7]]; //An array of values to acheive win state
+        let tempArray = [];         //Used in isSubset funct to store a different nested winValue array
 
 
         function mark(tempID) {
-            if (event.target.innerText == "" && declareWinner.innerText == "") {
-                if (xIsNext == true) {
-                    event.target.innerText = "X";
-                    XmarkedBoxes.push(tempID);
+            if (event.target.innerText == "" && declareWinner.innerText == "") {    //Skips over the entire funtion if button isnt empty or game won
+                if (xIsNext == true) {                                              //X starts by default var toggles in line 88
+                    event.target.innerText = "X";                                   //Marks X on the button
+                    XmarkedBoxes.push(tempID);                                      //Pushes button reference num into an array to record it's marked
                     console.log(XmarkedBoxes);
-                    isSubset(XmarkedBoxes, winValues, XmarkedBoxes.length);
+                    isSubset(XmarkedBoxes, winValues, XmarkedBoxes.length);         //Calls Subset func to check for a win state
                 }
                 else {
-                    event.target.innerText = "O";
-                    OmarkedBoxes.push(tempID);
+                    event.target.innerText = "O";                                   //Marks O on the button
+                    OmarkedBoxes.push(tempID);                                      //Pushes button reference num into an array to record it's marked
                     console.log(OmarkedBoxes);
-                    isSubset(OmarkedBoxes, winValues, OmarkedBoxes.length);
+                    isSubset(OmarkedBoxes, winValues, OmarkedBoxes.length);         //Calls Subset func to check for a win state
                 }
-                xIsNext = xIsNext ? false : true;
+                xIsNext = xIsNext ? false : true;                                   //Toggles xIsNext so that a different player starts each turn
             }
         }
 
@@ -63,32 +93,32 @@
             let i = 0;
             let j = 0;
             let k = 0;
-            for (k = 0; k < 8; k++) {
-                tempArray = arr2[k];
-                for (i = 0; i < tempArray.length; i++) {
-                    for (j = 0; j < m; j++) {
-                        if (tempArray[i] == arr1[j]) {
-                            threeToWin++;
+            for (k = 0; k < 8; k++) {                       //The most outer loop runs as many win states as there are
+                tempArray = arr2[k];                        //On each iteration, tempArray stores a different nested winState array
+                for (i = 0; i < tempArray.length; i++) {    // ==========>
+                    for (j = 0; j < m; j++) {               // =>2d array, outer runs 3 times, inner for as many X || O marked boxes there are
+                        if (tempArray[i] == arr1[j]) {      // checks if a number recorded in X/OmarkedBoxes exists in current win state array(stored in tempArray)
+                            threeToWin++;                   //If so, count +1 towards win state (requires 3)
                             console.log(threeToWin);
                         }
                     }
 
-                    if (threeToWin == 3) {
-                        arr1 == XmarkedBoxes ? declareWinner.innerText = "X wins!" : declareWinner.innerText = "O wins!";
+                    if (threeToWin == 3) {                  //If all three win points acheived in current iteration of k loop. induce win state
+                        arr1 == XmarkedBoxes ? (declareWinner.innerText = "X wins!", Xcol.innerText++) : (declareWinner.innerText = "O wins!", Ocol.innerText++);
                     }
                 }
-                threeToWin = 0;
+                threeToWin = 0;                             //If not, reset counter and check the next win state(next iteration of k loop)
             }
         }
 
-        function reset() {
+        function reset() {                                  //Resets the board
 
-            let childElement = document.getElementById("container").querySelectorAll("button");
+            let childElement = document.getElementById("container").querySelectorAll("button"); //stores an array of buttons
             console.log(childElement);
             for (let i = 0; i < childElement.length; i++) {
-                childElement[i].innerText = "";
+                childElement[i].innerText = "";                                                 //Resets text in each button in array
             }
-            xIsNext = true;
+            xIsNext = true;                     //Resets vars and win declaration to default values
             XmarkedBoxes = [];
             OmarkedBoxes = [];
             declareWinner.innerText = "";
