@@ -42,7 +42,7 @@
 
 
         function mark(tempID) {
-            if (event.target.innerText == "") {
+            if (event.target.innerText == "" && declareWinner.innerText == "") {
                 if (xIsNext == true) {
                     event.target.innerText = "X";
                     XmarkedBoxes.push(tempID);
