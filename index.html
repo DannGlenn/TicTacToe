@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homework_TicTacToe</title>
+    <style>
+        .gameButton {
+            height: 50px;
+            width: 50px;
+            font-size: 25px;
+            float: left;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div id="container">
+        <button id="box1" class="gameButton" onclick="mark(1)"></button>
+        <button id="box2" class="gameButton" onclick="mark(2)"></button>
+        <button id="box3" class="gameButton" onclick="mark(3)"></button><br><br><br>
+        <button id="box4" class="gameButton" onclick="mark(4)"></button>
+        <button id="box5" class="gameButton" onclick="mark(5)"></button>
+        <button id="box6" class="gameButton" onclick="mark(6)"></button><br><br><br>
+        <button id="box7" class="gameButton" onclick="mark(7)"></button>
+        <button id="box8" class="gameButton" onclick="mark(8)"></button>
+        <button id="box9" class="gameButton" onclick="mark(9)"></button><br><br><br>
+    </div>
+    <p id="declareWinner"></p>
+    <button onclick="reset()">Reset</button>
+
+    <script>
+        let xIsNext = true;
+        let threeToWin = 0;
+        let XmarkedBoxes = [];
+        let OmarkedBoxes = [];
+        const winValues = [[1, 2, 3], [4, 5, 6], [7, 8, 9], [1, 4, 7], [2, 5, 8], [3, 6, 9], [1, 5, 9], [3, 5, 7]];
+        let tempArray = [];
+
+
+        function mark(tempID) {
+            if (event.target.innerText == "") {
+                if (xIsNext == true) {
+                    event.target.innerText = "X";
+                    XmarkedBoxes.push(tempID);
+                    console.log(XmarkedBoxes);
+                    isSubset(XmarkedBoxes, winValues, XmarkedBoxes.length);
+                }
+                else {
+                    event.target.innerText = "O";
+                    OmarkedBoxes.push(tempID);
+                    console.log(OmarkedBoxes);
+                    isSubset(OmarkedBoxes, winValues, OmarkedBoxes.length);
+                }
+                xIsNext = xIsNext ? false : true;
+            }
+        }
+
+        function isSubset(arr1, arr2, m) {
+            let i = 0;
+            let j = 0;
+            let k = 0;
+            for (k = 0; k < 8; k++) {
+                tempArray = arr2[k];
+                for (i = 0; i < tempArray.length; i++) {
+                    for (j = 0; j < m; j++) {
+                        if (tempArray[i] == arr1[j]) {
+                            threeToWin++;
+                            console.log(threeToWin);
+                        }
+                    }
+
+                    if (threeToWin == 3) {
+                        arr1 == XmarkedBoxes ? declareWinner.innerText = "X wins!" : declareWinner.innerText = "O wins!";
+                    }
+                }
+                threeToWin = 0;
+            }
+        }
+
+        function reset() {
+
+            let childElement = document.getElementById("container").querySelectorAll("button");
+            console.log(childElement);
+            for (let i = 0; i < childElement.length; i++) {
+                childElement[i].innerText = "";
+            }
+            xIsNext = true;
+            XmarkedBoxes = [];
+            OmarkedBoxes = [];
+            declareWinner.innerText = "";
+        }
+    </script>
+</body>
+
+</html>
