@@ -1,0 +1,19 @@
+.gameButton {
+    height: 50px;
+    width: 50px;
+    font-size: 25px;
+    float: left;
+}
+
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 20%;
+}
+
+td,
+th {
+    border: 2px solid #000000;
+    text-align: center;
+    /* padding: 5px; */
+}
